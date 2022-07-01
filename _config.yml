@@ -21,12 +21,12 @@
 title: 거북이의 성장일지
 email: aliyashin9072@gmail.com
 description: >- # this means to ignore newlines until "baseurl:"
-  토끼와 거북이의 이야기처럼 천천히 느리게 가지만, 
-  결국엔 승리하는 거북이처럼 
-  꾸준하게, 그리고 반복하자.
-baseurl: "subsite url" # the subpath of your site, e.g. /blog
+  토끼와 거북이의 이야기처럼 천천히 느리게 가지만, <b/>
+  결국엔 승리하는 거북이처럼 <b/>
+  꾸준하게, 그리고 반복하자. 
+baseurl: "" # the subpath of your site, e.g. /blog
 url: "https://younghyunshin.github.io/" # the base hostname & protocol for your site, e.g. http://example.com
-twitter_username: 
+#twitter_username: 
 github_username:  younghyunshin
 
 # Build settings
