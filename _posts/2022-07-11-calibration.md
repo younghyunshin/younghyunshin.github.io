@@ -28,42 +28,29 @@ calibration이란, 출력값이 실제 confidence (논문에서 calibrated confi
 이렇듯, 모델의 출력값을 통해 모델이 헷갈려 하는 상황, 또는 문제가 될 수 있는 상황을 따로 분류하기 위해 필요할 것이다.   
 
 
-## Calibration 적용하기
+## Temperature scaling
 
-On Calibration of Modern Neural Networks 논문에서 가장 성능이 좋은 것으로 나왔던 Temperature scaling을 적용해보자.  
+On Calibration of Modern Neural Networks 논문에서 가장 성능이 좋은 것으로 나왔던 Temperature scaling에 대해 알아보자.    
 
 ![Center example image](https://user-images.githubusercontent.com/48853055/178239766-03450fe0-c4b4-40fd-9f3e-d25699b999fc.png "Center" width="100" height="150"){: .center-image} 
 
+처음에 식을 보곤 읭.. 뭐지 했었다.  
+차근차근 하나씩 이해해보자. 먼저 Temperature scaling은 multi classification model에 사용하는 것이다.  
+예를 들어, 5개의 클래스를 가진 multi classification model(`k==5가 될 것임`)이라고 해보자.  
+zi는 예시로 [0.5, 0.5, 1.0, 0.5, 0.5] 이렇게 되어있다고 해보자.  
+그러면 여기서 가장 큰 값이 1.0이고 이것의 k는 3이기에 3클래스(`network outputs a class prediction`)로 판별이 될 것이다.  
+그러나 여기서 식은 T로 모든 값들을 나눈다. T를 1로 하면, 값이 변화가 없을 것이다.  
+그런다음 softmax로 전체의 합이 1이되게 하기에, 전체를 전체 합인 3.0으로 나눈다.  
+zi는 [1/6, 1/6, 2/6, 1/6, 1/6]이 될 것이다.  
+그러면 이제 p는 2/6이 된다. 그렇기에 T를 1로 하면, 원래 softmax를 거치는 것과 동일한 효과를 얻게 된다.  
+T값이 1이 아닌 값으로 나누게 되면, 예를들어 2로 나누게 되면 모든 값들이 작아지게 되면서, 평준화가 된다.  
+이런 효과를 통해 한쪽의 값이 높은걸 약하게 할 수 있다.      
 
+## 적용 안하기로.. 
 
-## CABasicAnimation
-
-```swift
-let animation = CABasicAnimation(keyPath: "opacity")
-animation.fromValue = 0
-animation.toValue = 1
-```
-아래 코드는 backgroundColor를 변화시키는 코드이다.
-
-
-위 세 가지 경우 모두 fromValue, toValue라는 값을 지정해주는 것을 알 수 있다. 직관적으로 뭔가 fromValue의 값에서 toValue의 값으로 animation이 동작한다는 것을 느낄 수 있다. 실제로 애플공식문서에서 설명하는 definition도 다음과 같다:
-
-`fromValue` : Defines the value the receiver uses to **start** interpolation.
-
-`toValue` : Defines the value the receiver uses to **end** interpolation.
-
-`byValue` : Defines the value the receiver uses to **perform** relative interpolation.
-
-이 세 property들은 모두 optional이며 적어도 두개는 채워져아 한다. (그런데 하나만 non-nil일 때와 모두 nil인 경우에 대해서도 써있다..?) 각각이 옵셔널일 때 animation의 behavior가 달라진다.
-
-- fromValue, toValue 모두 non-nil : fromValue → toValue로 연결(interpolates)
-- fromValue, byValue 모두 non-nil : fromValue → (fromValue + byValue)
-- byValue, toValue 모두 non-nil : (to - byValue) → toValue
-- fromValue만 non-nil : fromValue → current presentation value of the property
-- toValue만 non-nil : current value of key path → toValue
-- byValue만 non-nil : current value of key path → (current value + byValue)
-- 모두 nil : previous value of key path → current value of key path
-
+모델의 결과 confusion matrix를 보니, open/close/unknown간의 관계에서 open/close가 서로 헷갈리는 걸로 나왔다. 
+Unknown과 헷갈리는 경우는 거의 없었다. 즉, Unknown을 새로 추가함으로 모델이 어려움을 겪는 것이 없다는 결론이 나왔다.   
+Calibration이 별로 효과가 없을 것이라 예상하여 적용 안하기로 ...
 
 
 ## References
