@@ -1,11 +1,11 @@
 ---
 layout: post
-title: "모델에 Calibration 적용하기"
+title: "자체 개발 모델에 Calibration 적용해볼..까?"
 tags: [딥러닝, 논문]
 comments: true
 ---
 
-> 말로만 듣던 Calibration에 대해  
+> (스포) 적용 안함..ㅋㅋ  
 
 ⚠ 딥러닝 알못의 글이므로 틀린 정보가 있을 수 있습니다.  
 
@@ -48,9 +48,13 @@ T값이 1이 아닌 값으로 나누게 되면, 예를들어 2로 나누게 되�
 
 ## 적용 안하기로.. 
 
-모델의 결과 confusion matrix를 보니, open/close/unknown간의 관계에서 open/close가 서로 헷갈리는 걸로 나왔다. 
-Unknown과 헷갈리는 경우는 거의 없었다. 즉, Unknown을 새로 추가함으로 모델이 어려움을 겪는 것이 없다는 결론이 나왔다.   
-Calibration이 별로 효과가 없을 것이라 예상하여 적용 안하기로 ...
+원래 이것을 적용하기로 한 이유가, 나의 모델은 눈이 Open(떴는지) / Close(감았는지)를 판별하는 모델이었다.  
+그러다 여기서 판별하기 어려운 상황, 예를들면 선글라스를 쓴 눈 같은 것도 판별하기 위해 Calibration을 적용하기로 했었다.  
+그전에 클래스를 하나 더 만들어 Open(떴는지) / Close(감았는지) / Unknown(기각 클래스)로 바꿔서 학습했다.    
+그 결과 나쁘지 않은 결과를 얻었다..!    
+Calibration을 적용해도 일단 Max값 자체는 변화하지 않으니 기각 클래스가 있다면 Calibration을 적용해도 별 차이가 없을 거라는 결론을 내렸다.  
+그렇기에 기각 클래스를 없애고 Calibration을 적용해서 Overconfident를 줄인 다음에 일정 Threshold 미만되는 경우에 기각하게 하는 형태로 적용해야 의미가 있을 것 같아, 나중에 적용해보기로..!    
+이와 별개로 Unknown과 Open/Close 간에 헷갈리는 게 많다면 Unknown에 대한 민감도를 좀 낮추더라도 Open/Close 정확도를 올리는 형태로 학습하려 했는데, Confusion Matrix를 보니 Open/Close 둘이 헷갈리고 있다;;; ㅎㅎ..   
 
 
 ## References
